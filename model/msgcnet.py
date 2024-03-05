@@ -281,8 +281,7 @@ class WindowEfficientSelfAttention(nn.Module):
         context = k.permute(0, 1, 3, 2) @ v
         attn_spatial = q @ context
 
-        # 对通道注意力图添加scale，Pool之前的通道注意力图的尺寸同样也会收到key_channels_redution的影响，
-        # 尺寸大小为 [_, _, att_dim//key_channels_reduction//num_heads, att_dim//key_channels_reduction//num_heads]
+
         dots_channel = (q.transpose(-2, -1) @ k).transpose(-2, -1) * self.channel_scale
         dots_channel_max = nn.functional.adaptive_max_pool2d(dots_channel, 1)
         dots_channel_avg = nn.functional.adaptive_avg_pool2d(dots_channel, 1)
@@ -299,7 +298,7 @@ class WindowEfficientSelfAttention(nn.Module):
         stage1 = self.head_proj(stage1)
 
 
-        # 多头已经融合，在窗口间的每个通道上融合
+
         # stage1 = self.attn_x(F.pad(stage1, pad=(0, 0, 0, 1), mode='reflect')) + \
         #          self.attn_y(F.pad(stage1, pad=(0, 1, 0, 0), mode='reflect'))
         #
