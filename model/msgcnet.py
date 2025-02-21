@@ -299,11 +299,11 @@ class WindowEfficientSelfAttention(nn.Module):
 
 
 
-        # stage1 = self.attn_x(F.pad(stage1, pad=(0, 0, 0, 1), mode='reflect')) + \
-        #          self.attn_y(F.pad(stage1, pad=(0, 1, 0, 0), mode='reflect'))
-        #
-        # stage1 = self.pad_out(stage1)
-        # stage1 = self.proj(stage1)
+        stage1 = self.attn_x(F.pad(stage1, pad=(0, 0, 0, 1), mode='reflect')) + \
+                 self.attn_y(F.pad(stage1, pad=(0, 1, 0, 0), mode='reflect'))
+        
+        stage1 = self.pad_out(stage1)
+        stage1 = self.proj(stage1)
 
 
         stage1_shorcut = stage1_shorcut[:, :, :H, :W]
